@@ -1138,11 +1138,13 @@ var PostgresQueryTransformer = /** @class */ (function (_super) {
         }
         switch (metadata.type) {
             case 'date':
+                value = typeof value === 'string' ? new Date(value) : value;
                 return {
                     value: dateToDateString(value),
                     cast: 'DATE',
                 };
             case 'time':
+                value = typeof value === 'string' ? new Date(value) : value;
                 return {
                     value: dateToTimeString(value),
                     cast: 'TIME',
@@ -1175,6 +1177,12 @@ var PostgresQueryTransformer = /** @class */ (function (_super) {
                 };
             case 'simple-enum':
             case 'enum':
+                if (typeof value === 'string' && value.includes('#enum#')) {
+                    return {
+                        value: value.split('#enum#')[1],
+                        cast: value.split('#enum#')[0],
+                    };
+                }
                 return {
                     value: '' + value,
                     cast: metadata.enumName || metadata.entityMetadata.tableName + "_" + metadata.databaseName.toLowerCase() + "_enum",
@@ -1263,7 +1271,10 @@ var PostgresQueryTransformer = /** @class */ (function (_super) {
         }
         return parameters.map(function (parameter, index) {
             if (parameter === null || parameter === undefined) {
-                return parameter;
+                return {
+                    name: "param_" + (index + 1),
+                    value: null
+                };
             }
             if (typeof parameter === 'object' && parameter.value) {
                 return (__assign({ name: "param_" + (index + 1) }, parameter));
