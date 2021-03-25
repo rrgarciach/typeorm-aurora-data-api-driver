@@ -199,6 +199,13 @@ var PostgresQueryTransformer = /** @class */ (function (_super) {
                     cast: parameter.split('#enum#')[0],
                 };
             }
+            if (typeof parameter === 'string' && parameter.includes('#date#')) {
+                return {
+                    name: "param_" + (index + 1),
+                    value: parameter.split('#date#')[1],
+                    cast: parameter.split('#date#')[0],
+                };
+            }
             return {
                 name: "param_" + (index + 1),
                 value: parameter,
