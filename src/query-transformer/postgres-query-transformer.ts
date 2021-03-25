@@ -35,6 +35,17 @@ export class PostgresQueryTransformer extends QueryTransformer {
           value: '' + value,
           cast: 'DECIMAL',
         }
+      case 'bigint':
+        if (metadata.isArray) {
+          return {
+            value: '' + value,
+            cast: 'bigint[]',
+          };
+        }
+        return {
+          value: '' + value,
+          cast: 'bigint',
+        };
       case 'simple-json':
       case 'json':
       case 'jsonb':
