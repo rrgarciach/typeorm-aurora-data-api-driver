@@ -47,7 +47,6 @@ export class PostgresQueryTransformer extends QueryTransformer {
         }
       case 'simple-enum':
       case 'enum':
-        console.log('CONSOLAZO!!!!!!!!!!!!!!!!!!!!!!!!');
         return {
           value: '' + value,
           cast: metadata.enumName || `${metadata.entityMetadata.tableName}_${metadata.databaseName.toLowerCase()}_enum`,
@@ -161,6 +160,13 @@ export class PostgresQueryTransformer extends QueryTransformer {
           value: '' + parameter,
           cast: 'uuid',
         }
+      }
+      if (typeof parameter === 'string' && parameter.includes('#enum#')) {
+        return {
+          name: "param_" + (index + 1),
+          value: parameter.split('#enum#')[1],
+          cast: parameter.split('#enum#')[0],
+        };
       }
 
       return {
