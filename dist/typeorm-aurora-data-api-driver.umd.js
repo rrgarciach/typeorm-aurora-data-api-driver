@@ -1181,6 +1181,11 @@
                         value: '' + value,
                         cast: 'UUID',
                     };
+                case 'cidr':
+                    return {
+                        value: '' + value,
+                        cast: 'cidr',
+                    };
                 case 'simple-enum':
                 case 'enum':
                     if (typeof value === 'string' && value.includes('#enum#')) {
