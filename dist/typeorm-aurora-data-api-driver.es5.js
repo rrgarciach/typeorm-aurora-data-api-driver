@@ -1203,6 +1203,13 @@ var PostgresQueryTransformer = /** @class */ (function (_super) {
                     value: '' + value,
                     cast: metadata.enumName || metadata.entityMetadata.tableName + "_" + metadata.databaseName.toLowerCase() + "_enum",
                 };
+            case 'varchar':
+                if (metadata.isArray) {
+                    return {
+                        value: '' + value,
+                        cast: 'varchar[]',
+                    };
+                }
             default:
                 return {
                     value: value,
